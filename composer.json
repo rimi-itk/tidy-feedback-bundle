@@ -1,0 +1,28 @@
+{
+    "name": "itk-dev/tidy-feedback-bundle",
+    "description": "Tidy Feedback bundle",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "authors": [
+        {
+            "name": "Mikkel Ricky",
+            "email": "rimi@aarhus.dk"
+        }
+    ],
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.47",
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "rector/rector": "^2.0",
+        "vincentlanglet/twig-cs-fixer": "^3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "ItkDev\\TidyFeedbackBundle\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        }
+    }
+}
