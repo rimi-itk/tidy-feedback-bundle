@@ -13,5 +13,15 @@
 
     <dt>{{ 'Subject'|trans }}</dt>
     <dd>{{ item.subject }}</dd>
+
+    <dt>{{ 'Status'|trans }}</dt>
+    <dd>{{ item.status.value }}</dd>
+
+    <dt>{{ 'Data'|trans }}</dt>
+    <dd><pre><code>{{ item.data|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES')) }}</code></pre></dd>
+      {% if item.data.svg %}
+      <dt>{{ 'Element' }}</dt>
+      <dd>{{  item.data.svg|raw }}</dd>
+    {% endif %}
   </dl>
 {% endblock %}

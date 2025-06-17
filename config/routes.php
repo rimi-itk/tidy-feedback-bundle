@@ -10,6 +10,14 @@ return function (RoutingConfigurator $routes): void {
         ->controller([FeedbackController::class, 'index'])
         ->methods([Request::METHOD_GET]);
 
+    $routes->add('tidy_feedback_new', '/new')
+        ->controller([FeedbackController::class, 'new'])
+        ->methods([Request::METHOD_GET, Request::METHOD_POST]);
+
+    $routes->add('tidy_feedback_widget', '/widget')
+        ->controller([FeedbackController::class, 'widget'])
+        ->methods([Request::METHOD_GET]);
+
     $routes->add('tidy_feedback_create', '/')
         ->controller([FeedbackController::class, 'create'])
         ->methods([Request::METHOD_POST]);
@@ -17,4 +25,5 @@ return function (RoutingConfigurator $routes): void {
     $routes->add('tidy_feedback_show', '/{item}')
         ->controller([FeedbackController::class, 'show'])
         ->methods([Request::METHOD_GET]);
+
 };

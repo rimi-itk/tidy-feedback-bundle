@@ -4,6 +4,7 @@ namespace ItkDev\TidyFeedbackBundle\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ItkDev\TidyFeedbackBundle\ItemStatus;
 use ItkDev\TidyFeedbackBundle\Repository\FeedbackItemRepository;
 
 #[ORM\Entity(repositoryClass: FeedbackItemRepository::class)]
@@ -15,16 +16,23 @@ class FeedbackItem implements \JsonSerializable, \Stringable
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    protected \DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(length: 255)]
-    private ?string $subject = null;
+    private string $status;
+
+    #[ORM\Column(length: 255)]
+    private string $subject;
+
+    #[ORM\Column(type: Types::JSON, length: 255)]
+    private array $data;
 
     public function __construct(
         #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
         protected ?string $createdBy = null,
     ) {
         $this->createdAt = new \DateTimeImmutable();
+        $this->setStatus(ItemStatus::NEW);
     }
 
     public function __toString(): string
@@ -65,5 +73,29 @@ class FeedbackItem implements \JsonSerializable, \Stringable
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getStatus(): ItemStatus
+    {
+        return ItemStatus::from($this->status);
+    }
+
+    public function setStatus(ItemStatus $status): static
+    {
+        $this->status = $status->value;
+
+        return $this;
+    }
+
+    public function getData(): array
+    {
+       return $this->data;
+    }
+
+    public function setData(array $data): static
+    {
+        $this->data = $data;
+
+        return $this;
     }
 }

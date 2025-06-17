@@ -1,0 +1,14 @@
+{% extends '@TidyFeedback/base.html.twig' %}
+{% trans_default_domain 'TidyFeedback' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'Create feedback'|trans }}</h1>
+
+    <div class="message">{{ 'Describe you issue in as much detail as possible.'|trans }}</div>
+
+    <p>I'm <strong>strong</strong>!</p>
+
+    {{ form(form) }}
+    <div id="feedback_form_screenshot_previev"></div>
+{% endblock %}

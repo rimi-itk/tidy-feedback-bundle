@@ -1,0 +1,137 @@
+<style>
+    .tidy-feedback-select-element {
+        .x {
+            position: absolute;
+            width: 1px;
+            height: 100%;
+            left: 0;
+            top: 0;
+            /*background-color: red;*/
+            border-left: dashed 1px blue;
+
+            transition: left .2s;
+        }
+
+        .y {
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            left: 0;
+            top: 0;
+            /*background-color: red;*/
+            border-top: dashed 1px blue;
+
+            transition: top .2s;
+        }
+
+        * {
+            /*opacity: .75;*/
+            /*filter: brightness(1.75);*/
+        }
+
+        .tidy-feedback-highlight {
+            /*opacity: 1;*/
+            outline: solid 5px red !important;
+        }
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@zumer/snapdom/dist/snapdom.min.js"></script>
+<script>
+    addEventListener('load', () => {
+            const addData = (key, value) => {
+                const el = document.getElementById('feedback_form_data')
+                const data = JSON.parse(el.value || '{}')
+                console.log({data})
+                data[key] = value
+                console.log({data})
+                el.value = JSON.stringify(data)
+            }
+
+            let lastElement
+
+            const xStart = document.createElement('div')
+            xStart.classList.add('tidy-feedback', 'x', 'start')
+            document.body.appendChild(xStart)
+
+            const xEnd = document.createElement('div')
+            xEnd.classList.add('tidy-feedback', 'x', 'end')
+            document.body.appendChild(xEnd)
+
+            const yStart = document.createElement('div')
+            yStart.classList.add('tidy-feedback', 'y', 'start')
+            document.body.appendChild(yStart)
+
+            const yEnd = document.createElement('div')
+            yEnd.classList.add('tidy-feedback', 'y', 'end')
+            document.body.appendChild(yEnd)
+
+            document.body.classList.add('tidy-feedback-select-element')
+
+            const mouseoverHandler = (event) => {
+                const el = event.target
+                if ('HTML' === el.nodeName
+                    || 'BODY' === el.nodeName
+                    || 'A' === el.nodeName
+                    || el.classList.contains('tidy-feedback')) {
+                    return;
+                }
+
+                if (lastElement !== event.target) {
+                    if (lastElement) {
+                        lastElement.classList.remove('tidy-feedback-highlight')
+                    }
+
+                    // console.log({event}, lastElement, event.target)
+
+                    lastElement = event.target
+                    lastElement.classList.add('tidy-feedback-highlight')
+
+                    xStart.style.left = lastElement.offsetLeft + 'px'
+                    xEnd.style.left = (lastElement.offsetLeft + lastElement.offsetWidth) + 'px'
+
+                    yStart.style.top = lastElement.offsetTop + 'px'
+                    yEnd.style.top = (lastElement.offsetTop + lastElement.offsetHeight) + 'px'
+                }
+            }
+
+            const clickHandler = async (event) => {
+                event.preventDefault()
+                if (lastElement === event.target) {
+                    removeEventListener('mouseover', mouseoverHandler)
+                    removeEventListener('click', clickHandler)
+
+                    const el = event.target
+
+                    lastElement.classList.remove('tidy-feedback-highlight')
+
+                    addData('html', document.documentElement.outerHTML)
+
+                    console.log(event, event.target)
+
+                    const result = await snapdom(event.target, {scale: 1});
+                    const img = await result.toPng();
+                    document.body.appendChild(img);
+
+                    // const preview = document.getElementById('feedback_form_screenshot')
+
+                    const blob = await result.toBlob(el);
+                    blob.text()
+                        .then(svg => addData('svg', svg))
+                    // .then(svg => {
+                    //     const display = document.getElementById('feedback_form_screenshot_previev')
+                    //     display.innerHTML = svg
+                    //     preview.parentElement.appendChild(display)
+                    // })
+
+
+                    // console.log({blob}, await blob.text())
+
+                }
+            }
+
+            addEventListener('mouseover', mouseoverHandler)
+            addEventListener('click', clickHandler)
+        }
+    )
+</script>
